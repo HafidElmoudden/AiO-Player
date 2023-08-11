@@ -4,7 +4,7 @@
   import Minimize from "./window-actions/Minimize.svelte";
 
 </script>
-<section id="title-bar" class="bg-orange-500 h-6 w-full flex flex-row-reverse" style="--wails-draggable:drag">
+<section id="title-bar" class="bg-[#ec4c24] h-6 w-full flex flex-row-reverse fixed" style="--wails-draggable:drag">
   <Close/>
   <!-- <Maximize/> -->
   <Minimize/>
