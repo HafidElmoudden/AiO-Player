@@ -8,7 +8,7 @@ enum FetchState {
 	Error
 }
 
-const data = writable({} as any)
+const playlistData = writable({} as any)
 
 const isFetching = writable<FetchState>()
 
@@ -16,17 +16,24 @@ async function getPlaylistData(playlistUrl: string) {
 	isFetching.set(FetchState.Fetching);
 	
 	await SearchYoutube(playlistUrl).then(result => {
-	  data.set(result);
+	  playlistData.set(result);
 	  isFetching.set(FetchState.Fetched);
     }).catch(err => {
 		console.log("Error", err);
 		isFetching.set(FetchState.Error);
 	});
 
-	data.subscribe(value => {
+	playlistData.subscribe(value => {
 		console.log("value", value);
 	});
-	console.log("hello : ",get(data));
+	console.log("hello : ",get(playlistData));
 }
 
-export { isFetching, data, getPlaylistData, FetchState }
+function getVideoData(id: string) {
+	if(Object.keys(get(playlistData)).length == 0) 
+		return null;
+
+    return get(playlistData).Videos.find((item: any) => item.ID == id);
+}
+
+export { isFetching, playlistData, getPlaylistData, getVideoData, FetchState }

@@ -3,6 +3,7 @@
   import Play from "../assets/images/play.svelte";
   import { get } from "svelte/store";
   import { Howl, Howler } from "howler";
+  import { AudioPlayer } from "../services/Audio";
 
   export let img = "";
   export let title = "";
@@ -18,17 +19,17 @@
       return;
     }
 
-    const audioPlayer = new Audio(data);
+    AudioPlayer.play(id, data);
 
-    audioPlayer.addEventListener('error', () => {
-      console.error('Error playing audio.');
+    AudioPlayer.addEventListener('timeupdate', (event) => {
+      // console.error('Audio timeupdate:', event.target.currentTime);
     });
 
-    audioPlayer.addEventListener('ended', () => {
+    AudioPlayer.addEventListener('ended', () => {
       console.log('Audio playback ended.');
     });
 
-    audioPlayer.play();
+    
     console.log('Stream Data:', data);
   } catch (error) {
     console.error('Error:', error);
@@ -38,7 +39,6 @@
 
 <div
   class="max-h-40 w-full rounded-lg custom-shadow flex mt-5"
-  on:click={() => handleAudio()}
 >
   <img src={img} alt="" class="w-40 h-20 object-cover rounded-l-lg" />
 
@@ -46,7 +46,7 @@
     <h5 class="font-bold truncate w-[16rem] max-w-[16rem] dark:text-white">
       {title}
     </h5>
-    <Play width={40} height={40} onClick={() => console.log("meow de meow")} />
+    <Play width={40} height={40} onClick={() => handleAudio()} />
   </div>
 </div>
 

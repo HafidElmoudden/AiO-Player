@@ -1,6 +1,6 @@
 <script lang="ts">
   // @ts-nocheck
-  import { Button, ButtonGroup, Input, Label } from "flowbite-svelte";
+  import { Button, ButtonGroup, Input } from "flowbite-svelte";
   import { SearchSolid } from "flowbite-svelte-icons";
   import { getPlaylistData } from "../store/Youtube.ts";
 

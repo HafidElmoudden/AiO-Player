@@ -3,10 +3,11 @@
   import * as wails from "../wailsjs/runtime/runtime.js";
   import SearchBar from "./components/SearchBar.svelte";
   import Spinner from "./components/Spinner.svelte";
-  import { FetchState, data, isFetching } from "./store/Youtube.ts";
+  import { FetchState, playlistData, isFetching } from "./store/Youtube.ts";
   import { get } from "svelte/store";
   import { Card } from "flowbite-svelte";
   import SongCard from "./components/SongCard.svelte";
+  import CurrentPlaying from "./components/CurrentPlaying.svelte";
 
   let showSpinner: FetchState = FetchState.NotFetched;
   isFetching.subscribe((value) => {
@@ -14,7 +15,7 @@
   });
 </script>
 
-<main class="w-full">
+<main class="w-full h-screen">
   <TitleBar />
   <div class="pt-5">
     <div class="flex justify-center items-center px-10 py-4">
@@ -30,7 +31,7 @@
       {#if showSpinner == FetchState.Fetched}
         <div class="flex flex-col w-full">
           <div class="scrollable-list overflow-y-auto overflow-x-hidden max-h-[400px] flex-grow-1">
-            {#each get(data).Videos as item}
+            {#each get(playlistData).Videos as item}
               <SongCard id={item.ID} img={item.Thumbnails[item.Thumbnails.length - 1].URL} title={item.Title} />
             {/each}
           </div>
@@ -38,11 +39,11 @@
       {/if}
     </div>
   </div>
+  <CurrentPlaying />
 </main>
 
 
 <style>
-  /* Scrollable list container */
   .scrollable-list {
     max-height: 400px;
     overflow-y: auto;
