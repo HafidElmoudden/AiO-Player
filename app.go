@@ -61,10 +61,15 @@ func (a *App) GetStreamURL(id string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-
 	// Find and extract the audio stream URL with the desired format
 	var audioStreamURL string
 	for _, format := range video.Formats {
+		meow, err := client.GetStreamURL(video, &format)
+		if(err != nil){
+			fmt.Println(err);
+		} else {
+			fmt.Println("some format : ", meow);
+		}
 		if strings.Contains(format.MimeType, "audio/") {
 			audioStreamURL, err = client.GetStreamURL(video, &format)
 			if err != nil {
@@ -77,6 +82,6 @@ func (a *App) GetStreamURL(id string) (string, error) {
 	if audioStreamURL == "" {
 		return "", fmt.Errorf("no suitable audio stream found")
 	}
-
+	fmt.Println("final desired format : ",audioStreamURL)
 	return audioStreamURL, nil
 }

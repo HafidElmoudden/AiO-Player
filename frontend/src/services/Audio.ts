@@ -3,19 +3,21 @@ import { writable } from "svelte/store";
 export class AudioPlayer {
     static audio: HTMLAudioElement;
     static isPlaying = writable(false);
-    static isPaused = writable(false);
     static currentlyPlaying = writable("");
 
-    static play(id: string, url?: string | null) {
+    static play(url?: string | null) {
         if (this.audio == null) {
             this.audio = new Audio();
         }
 
         if (url && this.audio) {
-            this.currentlyPlaying.set(id);
             this.audio.src = url;
         }
-        this.audio.play();
+        try {
+            this.audio.play();
+        } catch(err) {
+            console.log("Error occured while trying to play the audio!", err);
+        }
     }
 
     static pause() {

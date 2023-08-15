@@ -4,18 +4,21 @@
   import { getVideoData } from "../store/Youtube";
   import { get } from "svelte/store";
   import PlaylistIcon from "../assets/images/playlist-icon.svelte";
-  import MuteIcon from "../assets/images/mute-icon.svelte";
-  let actionIconsSize = "35";
+  import PauseIcon from "../assets/images/pause-icon.svelte";
+  let actionIconsSize = 24;
   let videoData = getVideoData(get(AudioPlayer.currentlyPlaying));
-
+  let isPlaying = false;
   AudioPlayer.currentlyPlaying.subscribe((value) => {
     videoData = getVideoData(value);
     console.log("Video Data:", get(AudioPlayer.currentlyPlaying), videoData);
   });
+  AudioPlayer.isPlaying.subscribe((value) => {
+    isPlaying = value;
+  });
 </script>
 
 <div
-  class="flex sticky bottom-0 justify-between z-50 w-full h-12 border-t-4 border-[#ec4c24]"
+  class="flex fixed bottom-0 justify-between z-50 w-full h-12 border-t-4 border-[#ec4c24]"
 >
   <div class="flex">
     <div>
@@ -37,7 +40,12 @@
 
   <div class="flex h-full justify-center items-center">
     <!-- Maybe change width and height in the future to size since we only need these icons here anyway -->
-    <PlayIcon width={actionIconsSize} height={actionIconsSize} />
-    <!-- <PlaylistIcon width={actionIconsSize} height={actionIconsSize} /> -->
+    {#if isPlaying}
+      <PlayIcon width={actionIconsSize} height={actionIconsSize} onClick={() => AudioPlayer.play()}/>
+    {/if}
+
+    {#if !isPlaying}
+      <PauseIcon width={actionIconsSize} height={actionIconsSize} onClick={() => AudioPlayer.pause()}/>
+    {/if}
   </div>
 </div>

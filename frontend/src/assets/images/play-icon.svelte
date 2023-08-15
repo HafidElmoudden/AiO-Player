@@ -1,17 +1,12 @@
 <script>
-  export let height = "48";
-  export let width = "48";
-  export let onClick = () => {};
+    export let width = 24;
+    export let height = 24;
+    export let onClick = () => {};
 </script>
 
-<svg
-  xmlns="http://www.w3.org/2000/svg"
-  {height}
-  viewBox="0 -960 960 960"
-  {width}
-  on:click={onClick}
->
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<svg xmlns="http://www.w3.org/2000/svg" width={width} on:click={onClick} height={height} viewBox="0 0 384 512">
   <path
-    d="M320-203v-560l440 280-440 280Zm60-280Zm0 171 269-171-269-171v342Z"
+    d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"
   /></svg
 >
