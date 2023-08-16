@@ -19,12 +19,8 @@
         return;
       }
 
-      AudioPlayer.play(data);
+      AudioPlayer.play(id, data);
 
-      AudioPlayer.addEventListener("play", (event) => {
-        AudioPlayer.currentlyPlaying.set(id);
-        AudioPlayer.isPlaying.set(true);
-      });
 
       AudioPlayer.addEventListener("timeupdate", (event) => {
         // console.error('Audio timeupdate:', event.target.currentTime);

@@ -5,7 +5,7 @@ export class AudioPlayer {
     static isPlaying = writable(false);
     static currentlyPlaying = writable("");
 
-    static play(url?: string | null) {
+    static play(id?: string, url?: string | null) {
         if (this.audio == null) {
             this.audio = new Audio();
         }
@@ -15,6 +15,9 @@ export class AudioPlayer {
         }
         try {
             this.audio.play();
+            if(id)
+                AudioPlayer.currentlyPlaying.set(id);
+            AudioPlayer.isPlaying.set(true);
         } catch(err) {
             console.log("Error occured while trying to play the audio!", err);
         }
