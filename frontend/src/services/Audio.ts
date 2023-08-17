@@ -2,6 +2,7 @@ import { getStreamData, streamData, streamFetchState, StreamFetchState } from ".
 import { playlistData } from "../store/Youtube";
 import { get, writable } from "svelte/store";
 import { shuffleArray } from "../utils/utils";
+import { LocalStorageService, StorageKey } from "./storage";
 
 export class AudioPlayer {
     static audio: HTMLAudioElement;
@@ -13,6 +14,9 @@ export class AudioPlayer {
     static async play(id?: string, url?: string | null)  {
         if (this.audio == null) {
             this.audio = new Audio();
+            const cachedVolume = LocalStorageService.get(StorageKey.VOLUME_KEY);
+            const parsedVolume = typeof cachedVolume === 'string' ? parseInt(cachedVolume, 10) : cachedVolume || 0.5;
+            this.audio.volume = parsedVolume;
             this.audio.addEventListener("ended", () => {
                 // if(get(this.currentlyPlaying) === id)
                 //     this.queue.set(get(this.queue).filter((item) => item.id !== id));

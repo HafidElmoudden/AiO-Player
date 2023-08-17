@@ -16,7 +16,7 @@
   let showList: boolean = false;
   const handleShowList = (value) => {
     showList = value;
-  }
+  };
 
   onMount(() => {
     isFetching.subscribe((value) => {
@@ -27,40 +27,45 @@
     });
     AudioPlayer.queue.subscribe((value) => {
       console.log("queue : ", value);
-      if(value.length > 0) {
+      if (value.length > 0) {
         AudioPlayer.play(value[0]);
       }
     });
-    
   });
   onDestroy(() => {
     AudioPlayer.stop();
-  })
+  });
 </script>
 
 <main class="w-full h-screen">
   <TitleBar />
   <div class="pt-5">
     <div class="flex justify-center items-center px-10 py-4">
-      <SearchBar handleShowList={handleShowList} eyeState={showList}/>
+      <SearchBar {handleShowList} eyeState={showList} />
     </div>
     <div class="h-full w-full flex gap-8 items-center justify-center px-10">
-      {#if showList != false}
-      {#if showSpinner == FetchState.Fetching}
-        <Spinner />
-      {/if}
-      {#if showSpinner == FetchState.Error}
-        <div class="text-red-500 text-2xl">Error</div>
-      {/if}
-      {#if showSpinner == FetchState.Fetched}
-        <div class="flex flex-col w-full">
-          <div class="scrollable-list overflow-y-auto overflow-x-hidden max-h-[400px] flex-grow-1 pr-2">
-            {#each get(playlistData).Videos as item}
-              <SongCard id={item.ID} img={item.Thumbnails[item.Thumbnails.length - 1].URL} title={item.Title} />
-            {/each}
+      {#if showList == true}
+        {#if showSpinner == FetchState.Fetching}
+          <Spinner />
+        {/if}
+        {#if showSpinner == FetchState.Error}
+          <div class="text-red-500 text-2xl">Error</div>
+        {/if}
+        {#if showSpinner == FetchState.Fetched}
+          <div class="flex flex-col w-full">
+            <div
+              class="scrollable-list overflow-y-auto overflow-x-hidden max-h-[400px] flex-grow-1 pr-2"
+            >
+              {#each get(playlistData).Videos as item}
+                <SongCard
+                  id={item.ID}
+                  img={item.Thumbnails[item.Thumbnails.length - 1].URL}
+                  title={item.Title}
+                />
+              {/each}
+            </div>
           </div>
-        </div>
-      {/if}
+        {/if}
       {/if}
     </div>
   </div>
@@ -68,7 +73,6 @@
     <CurrentPlaying />
   {/if}
 </main>
-
 
 <style>
   .scrollable-list {
