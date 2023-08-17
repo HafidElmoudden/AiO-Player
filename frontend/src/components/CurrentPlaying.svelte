@@ -6,6 +6,7 @@
   import VolumeMute from "../assets/images/volume-mute.svelte";
   import VolumePanel from "./VolumePanel.svelte";
   import { LocalStorageService, StorageKey } from "../services/storage";
+  import { onMount } from "svelte";
 
   let actionIconsSize = 24;
   let videoData = getVideoData(get(AudioPlayer.currentlyPlaying));

@@ -15,8 +15,6 @@ export class AudioPlayer {
         if (this.audio == null) {
             this.audio = new Audio();
             const cachedVolume = LocalStorageService.get(StorageKey.VOLUME_KEY);
-            const parsedVolume = typeof cachedVolume === 'string' ? parseInt(cachedVolume, 10) : cachedVolume || 0.5;
-            this.audio.volume = parsedVolume;
             this.audio.addEventListener("ended", () => {
                 // if(get(this.currentlyPlaying) === id)
                 //     this.queue.set(get(this.queue).filter((item) => item.id !== id));
