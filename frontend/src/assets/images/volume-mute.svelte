@@ -1,6 +1,6 @@
 <script>
-  export let width = 24;
-  export let height = 24;
+  export let width = 5;
+  export let height = 5;
   export let onClick = () => {};
   export let onHover = () => {};
 </script>

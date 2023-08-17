@@ -9,25 +9,43 @@
   import SongCard from "./components/SongCard.svelte";
   import CurrentPlaying from "./components/CurrentPlaying.svelte";
   import { AudioPlayer } from "./services/Audio";
+  import { onMount, onDestroy } from "svelte";
 
   let showSpinner: FetchState = FetchState.NotFetched;
   let showCurrentlyPlaying: boolean = false;
-  isFetching.subscribe((value) => {
-    showSpinner = value;
-  });
-  AudioPlayer.currentlyPlaying.subscribe((value) => {
-    showCurrentlyPlaying = value !== null && value.length > 0;
-  });
+  let showList: boolean = false;
+  const handleShowList = (value) => {
+    showList = value;
+  }
 
+  onMount(() => {
+    isFetching.subscribe((value) => {
+      showSpinner = value;
+    });
+    AudioPlayer.currentlyPlaying.subscribe((value) => {
+      showCurrentlyPlaying = value !== null && value.length > 0;
+    });
+    AudioPlayer.queue.subscribe((value) => {
+      console.log("queue : ", value);
+      if(value.length > 0) {
+        AudioPlayer.play(value[0]);
+      }
+    });
+    
+  });
+  onDestroy(() => {
+    AudioPlayer.stop();
+  })
 </script>
 
 <main class="w-full h-screen">
   <TitleBar />
   <div class="pt-5">
     <div class="flex justify-center items-center px-10 py-4">
-      <SearchBar />
+      <SearchBar handleShowList={handleShowList} eyeState={showList}/>
     </div>
     <div class="h-full w-full flex gap-8 items-center justify-center px-10">
+      {#if showList != false}
       {#if showSpinner == FetchState.Fetching}
         <Spinner />
       {/if}
@@ -42,6 +60,7 @@
             {/each}
           </div>
         </div>
+      {/if}
       {/if}
     </div>
   </div>

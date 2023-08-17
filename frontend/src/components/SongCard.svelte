@@ -1,8 +1,7 @@
 <script>
-  import { getStreamData, streamData } from "../store/Stream";
+  import { StreamFetchState, getStreamData, streamData, streamFetchState } from "../store/Stream";
   import Play from "../assets/images/play.svelte";
   import { get } from "svelte/store";
-  import { Howl, Howler } from "howler";
   import { AudioPlayer } from "../services/Audio";
 
   export let img = "";
@@ -12,13 +11,18 @@
   const handleAudio = async () => {
     try {
       await getStreamData(id);
+      if(get(streamFetchState) == StreamFetchState.Error) {
+        console.error("We couldn't play the audio. Check logs for more informations");
+        return;
+      }
+        
       const data = get(streamData);
 
       if (!data) {
         console.error("No audio stream data found.");
         return;
       }
-
+      AudioPlayer.addToQueue(id);
       AudioPlayer.play(id, data);
 
 
@@ -26,6 +30,7 @@
         // console.error('Audio timeupdate:', event.target.currentTime);
       });
       AudioPlayer.addEventListener("ended", () => {
+        
         console.log("Audio playback ended.");
       });
       AudioPlayer.addEventListener("error", (event) => {

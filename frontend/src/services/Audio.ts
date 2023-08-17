@@ -1,13 +1,39 @@
-import { writable } from "svelte/store";
+import { getStreamData, streamData, streamFetchState, StreamFetchState } from "../store/Stream";
+import { playlistData } from "../store/Youtube";
+import { get, writable } from "svelte/store";
+import { shuffleArray } from "../utils/utils";
 
 export class AudioPlayer {
     static audio: HTMLAudioElement;
     static isPlaying = writable(false);
     static currentlyPlaying = writable("");
+    static queue = writable([]);
+    static currentQueueIndex = writable(0);
 
-    static play(id?: string, url?: string | null) {
+    static async play(id?: string, url?: string | null)  {
         if (this.audio == null) {
             this.audio = new Audio();
+            this.audio.addEventListener("ended", () => {
+                // if(get(this.currentlyPlaying) === id)
+                //     this.queue.set(get(this.queue).filter((item) => item.id !== id));
+                // this.queue.set(get(this.queue).shift());
+                this.currentQueueIndex.set(get(this.currentQueueIndex) + 1);
+                this.incrementQueueIndex();
+                if(get(this.queue).length >= this.getCurrentQueueIndex() + 1)
+                    this.play(get(this.queue)[this.getCurrentQueueIndex()])
+            })
+        }
+
+        if(id && !url) {
+            await getStreamData(id);
+            if(get(streamFetchState) == StreamFetchState.Error) {
+                console.error("We couldn't play the audio. Check logs for more informations");
+                // this.queue.set(get(this.queue).shift());
+                this.incrementQueueIndex();
+                this.play(get(this.queue)[this.getCurrentQueueIndex()]);
+                return;
+            }
+            url = get(streamData);
         }
 
         if (url && this.audio) {
@@ -38,6 +64,28 @@ export class AudioPlayer {
         }
         this.audio.pause();
         this.audio.currentTime = 0;
+    }
+
+    static next() {
+        if (this.audio == null) {
+            console.error("There is no audio currently playing");
+            return;
+        }
+        // this.queue.set(get(this.queue).shift());
+        this.incrementQueueIndex();
+        if(get(this.queue).length >= this.getCurrentQueueIndex() + 1)
+            this.play(get(this.queue)[this.getCurrentQueueIndex()]);
+    }
+
+    static prev() {
+        if (this.audio == null) {
+            console.error("There is no audio currently playing");
+            return;
+        }
+        // this.queue.set(get(this.queue).shift());
+        this.decrementQueueIndex();
+        if(get(this.queue).length >= this.getCurrentQueueIndex() + 1)
+            this.play(get(this.queue)[this.getCurrentQueueIndex()]);
     }
 
     static setVolume(volume: number) {
@@ -140,5 +188,27 @@ export class AudioPlayer {
             return;
         }
         this.audio.removeEventListener(event, callback);
+    }
+    static shuffle() {
+        const shuffledArray = shuffleArray(get(playlistData).Videos.map((item) => item.ID));
+        this.addToQueue(shuffledArray);
+    }
+
+    static addToQueue(id: string | string[]) {
+        if(typeof id === "string")
+            this.queue.set([...get(this.queue), id]);
+        else if (typeof id === "object")
+            this.queue.set([...get(this.queue), ...id])
+    }
+
+    static incrementQueueIndex() {
+        this.currentQueueIndex.set(get(this.currentQueueIndex) + 1);
+    }
+    static decrementQueueIndex() {
+        this.currentQueueIndex.set(get(this.currentQueueIndex) - 1);
+    }
+
+    static getCurrentQueueIndex() {
+        return get(this.currentQueueIndex);
     }
 }
