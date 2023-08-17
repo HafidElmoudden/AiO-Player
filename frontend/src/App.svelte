@@ -13,7 +13,7 @@
 
   let showSpinner: FetchState = FetchState.NotFetched;
   let showCurrentlyPlaying: boolean = false;
-  let showList: boolean = false;
+  let showList: boolean = true;
   const handleShowList = (value) => {
     showList = value;
   };
