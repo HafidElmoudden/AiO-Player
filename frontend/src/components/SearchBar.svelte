@@ -33,6 +33,7 @@
       placeholder="Playlist link..."
       {value}
       on:change={(e) => (value = e.target.value)}
+      on:input={(e) => (value = e.target.value)}
     />
     <Button color="primary" on:click={() => getPlaylistData(value)}>
       <SearchSolid style="outline: none;" />

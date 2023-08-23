@@ -31,7 +31,8 @@ func (a *App) Greet(name string) string {
 func (a *App) SearchYoutube(query string) *youtube.Playlist {
 	client := &youtube.Client{}
 
-    res, err := client.GetPlaylist("https://www.youtube.com/playlist?list=PL2AuEnYKm_gavKIJjhHfvr_EL7uSNpiKV");
+    // res, err := client.GetPlaylist("https://www.youtube.com/playlist?list=PL2AuEnYKm_gavKIJjhHfvr_EL7uSNpiKV");
+    res, err := client.GetPlaylist(query);
 	
 	if(err != nil){
 		fmt.Println(err);
